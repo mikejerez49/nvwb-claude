@@ -1,1 +1,70 @@
+{
+  "model": "claude-opus-4-6",
+  "sandbox": {
+    "enabled": true,
+    "enableWeakerNestedSandbox": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyWrite": [
+        "~/.claude/settings.json",
+        "~/.claude/skills/ai-workbench-container",
+        "~/.claude/hooks",
+        "~/.claude.json",
+        "~/.claude/credentials.json",
+        "~/setup.sh",
+        "/project/.claude/settings.local.json",
+        "/project/.claude/hooks"
+      ],
+      "denyRead": [
+        "~/.claude.json",
+        "~/.claude/credentials.json"
+      ]
+    },
+    "autoAllowBashIfSandboxed": false
+  },
+  "permissions": {
+    "additionalDirectories": [
+      "~/",
+      "/tmp/",
+      "/project/"
+    ],
+    "ask": [
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(python -m pip install *)",
+      "Bash(python3 -m pip install *)",
+      "Bash(sudo *)",
+      "Bash(docker *)",
+      "Bash(podman *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/startup-claude.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-secrets-in-bash.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
 
